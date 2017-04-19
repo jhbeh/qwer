@@ -21,7 +21,7 @@ void partialRotate(vector<vector<int> > &A, int row)
     int n = row;
     int N = A.size() - 2*n;
     int tmp;
-    for(int m = n; m< N-1; m++)
+    for(int m = n; m< n+N-1; m++)
     {
         tmp = A[m][N-1-n];
         A[m][N-1-n] = A[n][m];
