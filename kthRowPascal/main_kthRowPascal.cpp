@@ -6,7 +6,16 @@
  */
 
 
+#include <iostream>
+#include <vector>
+using namespace std;
 
+class Solution{
+public:
+	Solution() {}
+	~Solution() {}
+	vector<int> getRow(int);
+};
 
 vector<int> Solution::getRow(int A) {
 	vector<int> past, curr;
