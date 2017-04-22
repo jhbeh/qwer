@@ -45,13 +45,56 @@ struct Interval {
 //}
 //
 
+//class Solution {
+//    public:
+//        static bool myCmp(Interval a, Interval b) {
+//            return a.start < b.start;
+//        }
+//
+//        vector<Interval> merge(vector<Interval> &intervals) {
+//            if(intervals.size() < 2) {
+//                return intervals;
+//            }
+//            sort(intervals.begin(), intervals.end(), myCmp);
+//            int first = 0;
+//            for(int second = 1; second < intervals.size(); second++) {
+//                // There is overlap in intervals at first and second position.
+//                if(intervals[second].start <= intervals[first].end) {
+//                    // We merge the second interval into the first one and modify the first interval to reflect it.
+//                    intervals[first].end = max(intervals[second].end, intervals[first].end);
+//                }
+//                else {
+//                    // No overlap between first and second. Move forward.
+//                    ++first;
+//                    intervals[first].start = intervals[second].start;
+//                    intervals[first].end = intervals[second].end;
+//                }
+//            }
+//            intervals.erase(intervals.begin() + first + 1, intervals.end());
+//            return intervals;
+//        }
+//};
+
+bool compare(Interval x, Interval y)
+{
+	return x.start < y.start;
+}
 class Solution
 {
 public:
 	Solution(){};
 	~Solution(){};
 	vector<Interval>merge(vector<Interval> &);
+//	static bool compare(Interval x, Interval y)
+//	{
+//		return x.start < y.start;
+//	}
 };
+//static bool Solution::compare(Interval x, Interval y)
+//{
+//	return x.start < y.start;
+//}
+
 vector<Interval> Solution:: merge(vector<Interval> &A)
 {
 	vector<Interval> res = A;
@@ -60,58 +103,57 @@ vector<Interval> Solution:: merge(vector<Interval> &A)
 		return res;
 	}
 	// sorting first
-	vector<pair<int,int> > temp4sort;
-	for(auto resi:res)
-		temp4sort.push_back(make_pair(resi.start, resi.end));
-
-	sort(temp4sort.begin(),temp4sort.end());
-	int idx = 0;
-	for(auto it = temp4sort.begin(); it != temp4sort.end(); it++)
+	sort(res.begin(), res.end(), compare);
+	int i = 0;
+	for(int j = 1; j < res.size(); j++)
 	{
-		res[idx++].start = it->first;
-		res[idx++].end = it->second;
+		if (res[j].start <= res[i].end)
+			res[i].end = max(res[i].end, res[j].end);
+		else
+		{
+			i++;
+			res[i].start = res[j].start;
+			res[i].end = res[j].end;
+		}
 	}
-//	for(size_t i = 0; i < temp4sort.size(); i++)
+	res.erase(res.begin()+i+1, res.end());
+	return res;
+
+//	bool mergeStart = false;
+//	bool mergeEnd = false;
+//	vector<Interval>::iterator it = res.begin();
+//	while((it+1) != res.end())
 //	{
-//		res[i].start = temp4sort[i].first;
-//		res[i].end = temp4sort[i].second;
+//		if ( ((it+1)->start >= it->start) and ((it+1)->start <= it->end) )
+//			mergeStart = true;
+//		else
+//			mergeStart = false;
+//		if ( ((it+1)->end >= it->start) and ((it+1)->end <= it->end) )
+//			mergeEnd = true;
+//		else
+//			mergeEnd = false;
+//
+//		if (mergeStart and mergeEnd)
+//		{
+//			res.erase((it+1));
+//		}
+//		else if (mergeStart and !mergeEnd)
+//		{
+//			it->end = (it+1)->end;
+//			res.erase(it+1);
+//		}
+//		else if (!mergeStart and !mergeEnd)
+//		{
+//			it++;
+//			mergeStart = false;
+//			mergeEnd = false;
+//		}
+//		else
+//		{
+//			// not likely happen
+//		}
+//
 //	}
-
-	bool mergeStart = false;
-	bool mergeEnd = false;
-	vector<Interval>::iterator it = res.begin();
-	while((it+1) != res.end())
-	{
-		if ( ((it+1)->start >= it->start) and ((it+1)->start <= it->end) )
-			mergeStart = true;
-		else
-			mergeStart = false;
-		if ( ((it+1)->end >= it->start) and ((it+1)->end <= it->end) )
-			mergeEnd = true;
-		else
-			mergeEnd = false;
-
-		if (mergeStart and mergeEnd)
-		{
-			res.erase((it+1));
-		}
-		else if (mergeStart and !mergeEnd)
-		{
-			it->end = (it+1)->end;
-			res.erase(it+1);
-		}
-		else if (!mergeStart and !mergeEnd)
-		{
-			it++;
-			mergeStart = false;
-			mergeEnd = false;
-		}
-		else
-		{
-			// not likely happen
-		}
-
-	}
 
 	return res;
 }
